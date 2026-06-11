@@ -3,6 +3,7 @@
 #include <time.h>
 #include <conio.h>
 #include <math.h>
+#include <locale.h>
 
 /* Definições de Limites Máximos */
 #define MAX_ROWS 25
@@ -62,6 +63,7 @@ void exibir_tutorial(void);
 void exibir_creditos(void);
 
 int main(void) {
+	setlocale(LC_ALL,"");
     char input;
     srand((unsigned int)time(NULL));
     
