@@ -31,11 +31,11 @@ struct Jogador {
 struct Monstro {
     int x;
     int y;
-    char tipo;          /* 'X', 'Y' ou 'Z' */
-    int ativo;          /* 1: Vivo, 0: Morto */
-    int vida_boss;      /* Usado apenas para o Boss Z */
-    char sub_celula;    /* Guarda o que estava embaixo do monstro para não destruir o mapa */
-    int stun;           /* Tempo de atordoamento para balancear o combate */
+    char tipo;         
+    int ativo;          
+    int vida_boss;      
+    char sub_celula;    
+    int stun;           
 };
 
 /* Variáveis Globais (Padrão C89) */
