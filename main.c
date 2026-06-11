@@ -51,6 +51,7 @@ int total_monstros = 0;
 /* Protótipos das Funções */
 void inicializar_jogo(void);
 void carregar_fase(int fase);
+void exibir_historia(int fase);
 void desenhar_mapa(void);
 void processar_entrada(char comando);
 void atualizar_monstros(void);
@@ -76,7 +77,8 @@ int main(void) {
             printf("\n===================================\n");
             printf("            GAME OVER              \n");
             printf("===================================\n");
-            printf(" Voce perdeu todas as suas vidas!\n\n");
+            printf(" A escuridao consumiu sua alma e o\n");
+            printf(" mundo caiu em ruinas eternas...\n\n");
             printf("Pressione qualquer tecla para voltar ao menu...");
             getch();
             estado_atual = ESTADO_MENU;
@@ -86,8 +88,9 @@ int main(void) {
             printf("\n===================================\n");
             printf("       PARABENS! VITORIA!          \n");
             printf("===================================\n");
-            printf(" Voce derrotou o grande Boss da masmorra!\n");
-            printf(" A paz finalmente retornou a vila.\n\n");
+            printf(" Com um golpe final, o Guardiao Z cai.\n");
+            printf(" A energia maligna se dissipa da masmorra.\n");
+            printf(" A paz finalmente retornou a vila!\n\n");
             printf("Pressione qualquer tecla para ver os creditos...");
             getch();
             exibir_creditos();
@@ -116,9 +119,57 @@ void inicializar_jogo(void) {
     estado_atual = ESTADO_MENU;
 }
 
+/* Nova função modular que insere a história sem mexer na estrutura do jogo */
+void exibir_historia(int fase) {
+    system("cls");
+    printf("====================================================\n");
+    printf("                  DIARIO DE JORNADA                 \n");
+    printf("====================================================\n\n");
+
+    if (fase == ESTADO_VILA) {
+        printf(" CAPITULO 1: O Clamor de Eldoria\n\n");
+        printf(" As terras outrora ferteis de Eldoria estao secas.\n");
+        printf(" Sussurros profanos ecoam da masmorra ao norte.\n");
+        printf(" Voce acorda no centro do vilarejo. Sua missao e clara:\n");
+        printf(" Encontre o Anciao da Vila (N) para obter uma arma\n");
+        printf(" e cruze o portal de luz (L) para a masmorra.\n");
+    } 
+    else if (fase == ESTADO_FASE1) {
+        printf(" CAPITULO 2: Os Saguao dos Esquecidos\n\n");
+        printf(" Voce cruza o portal e o ar se torna gélido.\n");
+        printf(" As paredes de pedra (*) cercam seus passos.\n");
+        printf(" Para avancar, voce deve encontrar chaves (@)\n");
+        printf(" escondidas atras de velhas caixas de madeira (k)\n");
+        printf(" e destrancar as pesadas portas de ferro (D).\n");
+    } 
+    else if (fase == ESTADO_FASE2) {
+        printf(" CAPITULO 3: As Cavernas do Medo\n\n");
+        printf(" O solo racha. O cheiro de enxofre denuncia o perigo.\n");
+        printf(" Chao falso esconde espinhos mortais (#).\n");
+        printf(" Uma Aberracao Errante (X) espreita este piso,\n");
+        printf(" movendo-se de forma imprevisivel. Ative os\n");
+        printf(" mecanismos corretos para abrir caminho.\n");
+    } 
+    else if (fase == ESTADO_FASE3) {
+        printf(" CAPITULO FINAL: O Trono de Sangue\n\n");
+        printf(" Voce alcancou o santuaria interno da colmeia.\n");
+        printf(" O Predador Ortogonal (Y) ja sentiu seu cheiro.\n");
+        printf(" No fundo da sala, o terrivel Guardiao da Cripta (Z)\n");
+        printf(" empunha sua lamina diagonal fatal.\n");
+        printf(" Nao ha mais volta. E a sua vida ou a deles!\n");
+    }
+
+    printf("\n====================================================\n");
+    printf("Pressione qualquer tecla para entrar no cenário...");
+    getch();
+}
+
 void carregar_fase(int fase) {
     int i, j;
     total_monstros = 0;
+
+    /* Dispara a tela de história correspondente antes de gerar o mapa */
+    exibir_historia(fase);
 
     if (fase == ESTADO_VILA) {
         linhas_atuais = 10; colunas_atuais = 10;
@@ -357,7 +408,7 @@ void realizar_ataque(void) {
     else if (player.simbolo == '<') dir_x = -1;
     else if (player.simbolo == '>') dir_x = 1;
 
-    /* ARMA 2: Arco e Flecha (Alcance corrigido para 4) */
+    /* ARMA 2: Arco e Flecha */
     if (player.arma == 2) {
         for (range = 1; range <= 4; range++) {
             ax = player.x + (dir_x * range);
@@ -419,11 +470,11 @@ void realizar_ataque(void) {
             }
         }
     }
-    /* ARMA 3: Cajado Mágico (Alcance corrigido para 8 adjacências, matriz 3x3) */
+    /* ARMA 3: Cajado Mágico */
     else if (player.arma == 3) {
         int ox, oy;
-       for (ox = -1; ox <= 1; ox++) {
-         for (oy = -1; oy <= 1; oy++){
+        for (ox = -1; ox <= 1; ox++) {
+            for (oy = -1; oy <= 1; oy++){
                 if (ox == 0 && oy == 0) continue;
                 ax = player.x + ox; ay = player.y + oy;
 
@@ -466,9 +517,10 @@ void interagir(void) {
     if (mapa[alvo_y][alvo_x] == 'N' && estado_atual == ESTADO_VILA) {
         system("cls");
         printf("===================================\n");
-        printf("         ANCIAO DA VILA            \n");
+        printf("          ANCIAO DA VILA           \n");
         printf("===================================\n");
-        printf(" Escolha sabiamente o seu armamento:\n\n");
+        printf(" Forasteiro, a profecia dizia que voce viria.\n");
+        printf(" Pegue um destes tesouros de nossa linhagem:\n\n");
         printf(" 1. Espada (Ataque amplo 3x2 a frente)\n");
         printf(" 2. Arco e Flecha (Longo alcance retilineo)\n");
         printf(" 3. Cajado Magico (Explosao em 8 direcoes)\n\n");
@@ -480,7 +532,7 @@ void interagir(void) {
         
         player.arma = opc - '0';
         system("cls");
-        printf("\nVoce equipou uma excelente arma! Va e conquiste a masmorra.\n");
+        printf("\n Que as divindades guiem seu braco. Va e purifique a masmorra!\n");
         printf("Pressione qualquer tecla para retornar ao mapa...");
         getch();
     }
@@ -519,7 +571,7 @@ void exibir_menu(void) {
 void exibir_tutorial(void) {
     system("cls");
     printf("====================================================\n");
-    printf("                TUTORIAL DO JOGO                    \n");
+    printf("                 TUTORIAL DO JOGO                   \n");
     printf("====================================================\n");
     printf(" HISTORIA:\n Adentre a masmorra, recolha as chaves,\n");
     printf(" destrua os obstaculos e derrote o Boss Final!\n\n");
@@ -541,7 +593,7 @@ void exibir_tutorial(void) {
 void exibir_creditos(void) {
     system("cls");
     printf("===================================\n");
-    printf("         CREDITOS DO JOGO          \n");
+    printf("          CREDITOS DO JOGO         \n");
     printf("===================================\n");
     printf(" Desenvolvedor Principal:\n");
     printf(" Augusto Pereira Ribeiro Ferreira\n\n");
